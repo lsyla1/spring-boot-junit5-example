@@ -1,30 +1,26 @@
 pipeline {
     agent any
-
     stages {
-    stage ('Initialize') {
-                steps {
-                    sh '''
-                        echo "PATH = ${PATH}"
-                        echo "M2_HOME = ${M2_HOME}"
-                    '''
-                }
-            }
-        stage('Build') {
-            steps {
-                sh 'mvn clean install'
-            }
-        }
-        stage('Test') {
-            steps {
-                sh 'mvn clean test'
-                junit 'src/reports/*-jupiter.xml'
-            }
-        }
-        stage('Deploy') {
-            steps {
-                sh 'mvn clean deploy'
-            }
+    stage ('Compile Stage') {
+    steps {
+        withMaven(maven : 'apache-maven-3.6.1') {
+        bat'mvn clean compile'
         }
     }
+    }
+    stage ('Testing Stage') {
+    steps {
+        withMaven(maven : 'apache-maven-3.6.1') {
+        bat'mvn test'
+    }
+}
+}
+stage ('Install Stage') {
+steps {
+withMaven(maven : 'apache-maven-3.6.1') {
+bat'mvn install'
+}
+}
+}
+}
 }
