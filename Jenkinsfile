@@ -1,7 +1,7 @@
 pipeline {
     agent any
-    environment{
-    PATH = "/usr/local/Cellar/maven/3.6.3_1/libexec:$PATH"
+    tools {
+        maven "Maven"
     }
     stages {
         stage('Build') {
