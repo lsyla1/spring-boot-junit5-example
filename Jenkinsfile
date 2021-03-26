@@ -17,5 +17,8 @@ pipeline {
                 }
             }
         }
+        stage('Publish test results') {
+             junit 'target/surefire-reports/*.xml'
+        } 
     }
 }
