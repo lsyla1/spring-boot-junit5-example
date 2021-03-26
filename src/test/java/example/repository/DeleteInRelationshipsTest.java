@@ -66,9 +66,9 @@ public class DeleteInRelationshipsTest {
     public void whenDeletingAuthors_thenBooksShouldAlsoBeDeleted() {
 
         authorRepository.delete(author1);
-        //authorRepository.delete(author2);
+        authorRepository.delete(author2);
 
-        assertEquals(bookInitialCount, bookRepository.count());
+        assertEquals(8, bookRepository.count());
         assertEquals(authorInitialCount, authorRepository.count());
     }
 
@@ -77,7 +77,7 @@ public class DeleteInRelationshipsTest {
     public void whenDeletingBooks_thenAuthorShouldNotBeDeleted() {
 
         //given
-        //long authorCount = authorRepository.count();
+        long authorCount = authorRepository.count();
         bookRepository.deleteAll(Arrays.asList(book1, book2));
 
         assertEquals(bookInitialCount, bookRepository.count());
