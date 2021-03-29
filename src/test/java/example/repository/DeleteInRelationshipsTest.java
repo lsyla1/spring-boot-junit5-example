@@ -68,7 +68,7 @@ public class DeleteInRelationshipsTest {
         authorRepository.delete(author1);
         authorRepository.delete(author2);
 
-        assertEquals(8, bookRepository.count());
+        assertEquals(bookInitialCount, bookRepository.count());
         assertEquals(authorInitialCount, authorRepository.count());
     }
 
