@@ -9,19 +9,15 @@ pipeline {
                 sh 'mvn -B -DskipTests clean package'
             }
         }
-        stage('Test') {
+        stage('Publish Test Results') {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE'){
                  sh 'mvn test'
                 }
+                 junit 'target/surefire-reports/*.xml'
+                            influxDbPublisher(selectedTarget: 'JUnit_Data')
             }
 
         }
-        stage('Publish test results') {
-            steps{ 
-            junit 'target/surefire-reports/*.xml'
-            influxDbPublisher(selectedTarget: 'JUnit_Data')
-            }
-        } 
     }
 }
