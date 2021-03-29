@@ -11,14 +11,11 @@ pipeline {
         }
         stage('Test') {
             steps {
-                sh 'mvn test'
-                junit 'target/surefire-reports/*.xml'
-            }
-            post {
-                always {
-                    junit 'target/surefire-reports/*.xml'
+                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE'){
+                 sh 'mvn test'
                 }
             }
+
         }
         stage('Publish test results') {
             steps{ 
