@@ -6,7 +6,12 @@ import example.exception.DuplicatedEntityException;
 import example.exception.EntityNotFoundException;
 import example.dto.BookDto;
 import example.service.BookService;
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.Meter;
 import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.Timer;
+import io.micrometer.core.instrument.composite.CompositeMeterRegistry;
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import io.micrometer.influx.InfluxMeterRegistry;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -35,7 +40,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 
 import java.math.BigDecimal;
+import java.sql.Time;
+import java.time.Duration;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -60,11 +68,13 @@ public class BookResourceTest {
     @Test
     @DisplayName("get Book, should return expected Book")
     public void getBookShouldReturn200() throws Exception {
-
         //givens
         long bookId = 0L;
         given(this.bookService.get(bookId)).willReturn(new BookDto());
-        meterRegistry.counter("call_getBookShouldReturn200").increment();
+      
+        meterRegistry.counter("call_getBookShouldReturn200").increment(20);
+
+
 
         //when-then
         this.mockMvc.perform(get("/api/v1/books/"+bookId)
