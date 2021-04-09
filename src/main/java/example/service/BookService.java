@@ -8,6 +8,7 @@ import example.exception.DuplicatedEntityException;
 import example.exception.EntityNotFoundException;
 import example.model.Book;
 import example.repository.BookRepository;
+import io.micrometer.core.instrument.MeterRegistry;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
