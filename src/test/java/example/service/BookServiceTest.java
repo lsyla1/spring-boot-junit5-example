@@ -10,8 +10,10 @@ import example.exception.EntityNotFoundException;
 import example.model.Book;
 import example.repository.BookRepository;
 
+import io.micrometer.core.instrument.MeterRegistry;
 import org.junit.jupiter.api.*;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -39,7 +41,6 @@ public class BookServiceTest {
     @Test
     @DisplayName("given Book id, when get Book, then Book is retrieved")
     void givenBookId_whenGetBook_ThenBookRetrieved() {
-
         //given
         long existingBookId = 0L;
         Book book1 = Book.builder().id(0L).description("example").genre("Terror").title("title").price(BigDecimal.TEN).build();
@@ -73,7 +74,6 @@ public class BookServiceTest {
     @Test
     @DisplayName("when list Book, then Books are retrieved")
     void whenListBooks_ThenBooksRetrieved() {
-
         //given
         long existingBookId = 0L;
         Book book1 = Book.builder().id(existingBookId).description("example").genre("Terror").title("title").price(BigDecimal.TEN).build();
