@@ -1,21 +1,23 @@
 pipeline {
     agent any
+    environment {
+        LOG_JUNIT_RESULTS = 'true'
+    }
     stages {
         stage('Build') {
             steps {
                 sh 'mvn -B -DskipTests clean package'
             }
         }
-        stage('Test') {
+        stage('Publish Test Results') {
             steps {
-                sh 'mvn test'
-                junit 'target/surefire-reports/*.xml'
-            }
-            post {
-                always {
-                    junit 'target/surefire-reports/*.xml'
+                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE'){
+                 sh 'mvn test'
                 }
+                 junit 'target/surefire-reports/*.xml'
+                            influxDbPublisher(selectedTarget: 'JUnit_Data')
             }
+
         }
     }
 }
