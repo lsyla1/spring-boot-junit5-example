@@ -4,8 +4,10 @@ import example.dto.AuthorDto;
 import example.exception.EntityNotFoundException;
 import example.model.Author;
 import example.repository.AuthorRepository;
+import io.micrometer.core.instrument.MeterRegistry;
 import org.junit.jupiter.api.*;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Optional;
@@ -24,7 +26,6 @@ public class AuthorServiceTest {
 
     private AuthorRepository authorRepositoryMock;
     private AuthorService authorService;
-
 
     @BeforeAll
     public void init() {

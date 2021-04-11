@@ -2,6 +2,8 @@ package example.repository;
 
 import example.model.Book;
 import example.model.Author;
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.Timer;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +31,9 @@ public class BookRepositoryTest {
 
     @Autowired
     private AuthorRepository authorRepository;
+
+    @Autowired
+    private MeterRegistry meterRegistry;
 
     private Book book1;
     private Book book2;
@@ -75,7 +80,10 @@ public class BookRepositoryTest {
     @Test
     @DisplayName("when deleteAll  from repository, then repository should be restored")
     public void whenDeleteAllFromRepository_thenRepositoryShouldBeRestored() {
-        bookRepository.deleteAll(Arrays.asList(book1, book2));
+        Timer timer = Timer.builder("bookDeleteAll").tag("delete", "from Repo").register(meterRegistry);
+
+        // execution of the method is timed internally
+        timer.record(() -> bookRepository.deleteAll(Arrays.asList(book1, book2)));
 
         assertEquals(initialCount, bookRepository.count());
     }
