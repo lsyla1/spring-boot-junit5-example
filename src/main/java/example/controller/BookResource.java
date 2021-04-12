@@ -7,6 +7,10 @@ import javax.validation.Valid;
 
 import example.dto.BookDto;
 import example.service.BookService;
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.Meter;
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.Timer;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -24,10 +28,14 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 public class BookResource {
 
     private final BookService bookService;
+    Counter getCounter;
+    Timer getTimer;
 
     @Autowired
-    public BookResource(BookService bookService) {
+    public BookResource(BookService bookService, MeterRegistry meterRegistry) {
         this.bookService = bookService;
+        getCounter = Counter.builder("get_books_counter").description("Number of GET Requests").register(meterRegistry);
+        getTimer = Timer.builder("get_books_timer").description("ResponseTime for GET").register(meterRegistry);
     }
 
     @ApiOperation(value = "Gets the list of available books")
@@ -36,8 +44,9 @@ public class BookResource {
     })
     @GetMapping(path = "/books", produces = {"application/json"})
     public ResponseEntity<List<BookDto>> list() {
-
+        getCounter.increment();
         log.info("GET /api/v1/books");
+        getTimer.record(() -> ResponseEntity.ok(bookService.list()));
         return ResponseEntity.ok(bookService.list());
     }
 

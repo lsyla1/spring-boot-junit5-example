@@ -63,7 +63,10 @@ public class BookRepositoryTest {
     @Test
     @DisplayName("when deleteById from repository, then deleting should be successful")
     public void whenDeleteByIdFromRepository_thenDeletingShouldBeSuccessful() {
-        bookRepository.deleteById(book1.getId());
+        Timer timer = Timer.builder("bookDeleteByID").tag("delete", "from Repo").register(meterRegistry);
+
+        // execution of the method is timed internally
+        timer.record(() -> bookRepository.deleteById(book1.getId()));
 
         assertEquals(initialCount+1, bookRepository.count());
     }

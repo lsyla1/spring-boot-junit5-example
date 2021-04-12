@@ -2,6 +2,8 @@ package example.repository;
 
 import example.model.Book;
 import example.model.Author;
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +31,9 @@ public class DeleteInRelationshipsTest {
     @Autowired
     private AuthorRepository authorRepository;
 
+    @Autowired
+    private MeterRegistry registry;
+
     private Author author1;
     private Author author2;
     private long authorInitialCount;
@@ -39,14 +44,18 @@ public class DeleteInRelationshipsTest {
 
     @BeforeEach
     public void init() {
+        Counter counter = Counter.builder("callAuthorRepoCounter").description("Count calls to AuthorRepo").register(registry);
 
         authorInitialCount = authorRepository.count();
+        counter.increment(1);
 
         Author mb1 = Author.builder().email("test1@example.com").firstName("Test1").lastName("Surname1").build();
         author1 = authorRepository.save(mb1);
+        counter.increment(1);
 
         Author mb2 = Author.builder().email("test2@example.com").firstName("Test2").lastName("Surname2").build();
         author2 = authorRepository.save(mb2);
+        counter.increment(1);
 
         book1 = Book.builder().description("example1").title("test1").genre("genre1").price(BigDecimal.TEN).author(author1).build();
         book2 = Book.builder().description("example2").title("test2").genre("genre2").price(BigDecimal.TEN).author(author2).build();

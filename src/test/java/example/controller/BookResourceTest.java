@@ -53,8 +53,6 @@ import java.util.concurrent.TimeUnit;
 @DisplayName("Book Resource Integration Tests")
 public class BookResourceTest {
 
-    @Autowired
-    private MeterRegistry meterRegistry;
 
     @Autowired
     private MockMvc mockMvc;
@@ -65,15 +63,14 @@ public class BookResourceTest {
     @MockBean
     private BookService bookService;
 
+    Counter testCounter;
+
     @Test
     @DisplayName("get Book, should return expected Book")
     public void getBookShouldReturn200() throws Exception {
         //givens
         long bookId = 0L;
         given(this.bookService.get(bookId)).willReturn(new BookDto());
-      
-        meterRegistry.counter("call_getBookShouldReturn200").increment(20);
-
 
 
         //when-then
@@ -147,6 +144,8 @@ public class BookResourceTest {
     @Test
     @DisplayName("create incomplete Book, should return 400")
     public void createIncompleteBookShouldReturn400() throws Exception {
+        //testCounter = Counter.builder("counter_should_inc_20").description("testCounter").register(simpleMeterRegistry);
+        //testCounter.increment(20);
 
         //given
         BookDto book1 = BookDto.builder().description("example").build();
