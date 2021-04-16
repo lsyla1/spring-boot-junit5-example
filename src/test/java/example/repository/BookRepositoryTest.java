@@ -63,7 +63,7 @@ public class BookRepositoryTest {
     @Test
     @DisplayName("when deleteById from repository, then deleting should be successful")
     public void whenDeleteByIdFromRepository_thenDeletingShouldBeSuccessful() {
-        Timer timer = Timer.builder("bookDeleteByID").tag("delete", "from Repo").register(meterRegistry);
+        Timer timer = Timer.builder("time_to_delete_book_by_id").tag("delete", "from Repo").register(meterRegistry);
 
         // execution of the method is timed internally
         timer.record(() -> bookRepository.deleteById(book1.getId()));
@@ -75,7 +75,7 @@ public class BookRepositoryTest {
     @Transactional
     @DisplayName("when delete from derived query, then deleting should be successful")
     public void whenDeleteFromDerivedQuery_thenDeletingShouldBeSuccessful() {
-        long deletedRecords = bookRepository.deleteByTitle("title1");
+        long deletedRecords = bookRepository.deleteByTitle("tie1");
         assertEquals(1, deletedRecords);
         assertEquals(initialCount+1, bookRepository.count());
     }
