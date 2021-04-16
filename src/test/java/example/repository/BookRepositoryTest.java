@@ -75,7 +75,7 @@ public class BookRepositoryTest {
     @Transactional
     @DisplayName("when delete from derived query, then deleting should be successful")
     public void whenDeleteFromDerivedQuery_thenDeletingShouldBeSuccessful() {
-        long deletedRecords = bookRepository.deleteByTitle("tie1");
+        long deletedRecords = bookRepository.deleteByTitle("title1");
         assertEquals(1, deletedRecords);
         assertEquals(initialCount+1, bookRepository.count());
     }
