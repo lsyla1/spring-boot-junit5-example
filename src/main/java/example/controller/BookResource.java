@@ -31,11 +31,14 @@ public class BookResource {
     Counter getCounter;
     Timer getTimer;
 
+    Timer postTimer;
+
     @Autowired
     public BookResource(BookService bookService, MeterRegistry meterRegistry) {
         this.bookService = bookService;
         getCounter = Counter.builder("get_books_counter").description("Number of GET Requests").register(meterRegistry);
         getTimer = Timer.builder("get_books_timer").description("ResponseTime for GET").register(meterRegistry);
+        postTimer = Timer.builder("post_books_timer").description("ResponseTime for POST").register(meterRegistry);
     }
 
     @ApiOperation(value = "Gets the list of available books")
@@ -74,8 +77,7 @@ public class BookResource {
     })
     @PostMapping(path = "/books", consumes = {"application/json"})
     public ResponseEntity<Void> create(@Valid @RequestBody BookDto bookDto) {
-
-        log.info("POST /api/v1/books : "+bookDto);
+        postTimer.record(()->log.info("POST /api/v1/books : "+bookDto));
         Long bookId = bookService.create(bookDto);
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")

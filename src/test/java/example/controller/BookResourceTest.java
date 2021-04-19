@@ -6,10 +6,7 @@ import example.exception.DuplicatedEntityException;
 import example.exception.EntityNotFoundException;
 import example.dto.BookDto;
 import example.service.BookService;
-import io.micrometer.core.instrument.Counter;
-import io.micrometer.core.instrument.Meter;
-import io.micrometer.core.instrument.MeterRegistry;
-import io.micrometer.core.instrument.Timer;
+import io.micrometer.core.instrument.*;
 import io.micrometer.core.instrument.composite.CompositeMeterRegistry;
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import io.micrometer.influx.InfluxMeterRegistry;
@@ -51,7 +48,7 @@ import java.util.concurrent.TimeUnit;
 @ActiveProfiles("test")
 @Tag("IntegrationTest")
 @DisplayName("Book Resource Integration Tests")
-public class BookResourceTest {
+public class  BookResourceTest {
 
 
     @Autowired
@@ -62,8 +59,6 @@ public class BookResourceTest {
 
     @MockBean
     private BookService bookService;
-
-    Counter testCounter;
 
     @Test
     @DisplayName("get Book, should return expected Book")
